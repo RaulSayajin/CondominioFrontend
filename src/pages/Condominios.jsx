@@ -18,6 +18,7 @@ export default function Condominios() {
   const [condominios, setCondominios] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+
   useEffect(() => {
     carregarCondominios();
   }, []);
@@ -26,17 +27,27 @@ export default function Condominios() {
     setLoading(true);
     try {
       const response = await api.get("/condominios");
-      setCondominios(response.data);
+      
+      // Validação defensiva: garante que 'dados' seja sempre um array
+      const dados = Array.isArray(response.data) 
+        ? response.data 
+        : (response.data?.condominios || []);
+      
+      setCondominios(dados);
     } catch (err) {
       console.error("Erro ao carregar condomínios:", err);
+      setCondominios([]);
     } finally {
       setLoading(false);
     }
   }
 
-  const filtered = condominios.filter(c => 
-    c.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    c.cnpj?.includes(searchTerm)
+  // Filtro seguro: se 'condominios' não for um array, retorna array vazio
+  const listaExibicao = Array.isArray(condominios) ? condominios : [];
+  
+  const filtered = listaExibicao.filter(c => 
+    (c?.nome?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+    (c?.cnpj || "").includes(searchTerm)
   );
 
   return (
@@ -101,7 +112,7 @@ export default function Condominios() {
               </div>
 
               <h3 className="font-bold text-slate-900 text-lg mb-1 group-hover:text-blue-600 transition-colors">
-                {condo.nome}
+                {condo.nome || "Condomínio Sem Nome"}
               </h3>
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-slate-500 text-sm">

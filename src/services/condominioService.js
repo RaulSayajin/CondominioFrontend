@@ -8,30 +8,35 @@ export const condominioService = {
   /** Lista todos os condomínios */
   getAll: async () => {
     const response = await api.get('/condominios');
+    console.log('Resposta completa:', response.data);
     return response.data;
   },
 
   /** Busca um condomínio específico por ID */
   getById: async (id) => {
     const response = await api.get(`/condominios/${id}`);
+    console.log('Resposta completa:', response.data);
     return response.data;
   },
 
   /** Cadastra um novo condomínio */
   create: async (data) => {
     const response = await api.post('/condominios', data);
+    console.log('Resposta completa:', response.data);
     return response.data;
   },
 
   /** Atualiza os dados de um condomínio */
   update: async (id, data) => {
     const response = await api.put(`/condominios/${id}`, data);
+    console.log('Resposta completa:', response.data);
     return response.data;
   },
 
   /** Exclui um condomínio */
   delete: async (id) => {
     const response = await api.delete(`/condominios/${id}`);
+    console.log('Resposta completa:', response.data);
     return response.data;
   },
 
